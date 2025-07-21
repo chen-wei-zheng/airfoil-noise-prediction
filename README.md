@@ -54,7 +54,7 @@ These instructions will guide you through setting up the environment and running
 1.  **Clone the repository:**
     ```bash
     git clone https://github.com/chen-wei-zheng/airfoil-noise-prediction
-    cd main
+    cd airfoil-noise-prediction
     ```
 
 2.  **Install the required libraries:**
