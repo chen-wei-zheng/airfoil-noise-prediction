@@ -1,6 +1,7 @@
 import pandas as pd
 import requests
 import io
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
@@ -61,6 +62,14 @@ def show_feature_importance(model: RandomForestRegressor, features: pd.Index):
     feature_importance_df = feature_importance_df.sort_values('importance', ascending=False)
     print(feature_importance_df)
 
+def predict_new_data(model: RandomForestRegressor, new_data: pd.DataFrame) -> pd.Series:
+    """
+    Predicts sound_pressure_level for new data using the trained model.
+    Expects new_data to have the same feature columns as training data.
+    """
+    predictions = model.predict(new_data)
+    return pd.Series(predictions, name="predicted_sound_pressure_level")
+
 def main():
     """Main function to orchestrate the project pipeline."""
     # Load the data
@@ -84,6 +93,28 @@ def main():
 
     # Show feature importances
     show_feature_importance(model, X.columns)
+
+    # Demo: Predict on new data and save to Excel with predictions in a new sheet
+    demo_data_path = "demo_new_data.csv"
+    try:
+        new_data = pd.read_csv(demo_data_path)
+        # Get predictions from each tree
+        all_tree_preds = [tree.predict(new_data) for tree in model.estimators_]
+        all_tree_preds = np.array(all_tree_preds)
+        predictions = np.mean(all_tree_preds, axis=0)
+        std_devs = np.std(all_tree_preds, axis=0)
+        # Combine input and predictions
+        result_df = new_data.copy()
+        result_df["predicted_sound_pressure_level"] = predictions
+        result_df["prediction_stddev"] = std_devs
+
+        # Save to Excel: input data in one sheet, predictions in another
+        with pd.ExcelWriter("demo_predictions.xlsx") as writer:
+            new_data.to_excel(writer, sheet_name="InputData", index=False)
+            result_df.to_excel(writer, sheet_name="Predictions", index=False)
+        print(f"Predictions saved to 'demo_predictions.xlsx' (see 'Predictions' sheet).")
+    except Exception as e:
+        print(f"Error during demo prediction: {e}")
 
 if __name__ == "__main__":
     main()

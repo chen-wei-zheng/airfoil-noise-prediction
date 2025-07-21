@@ -1,7 +1,6 @@
-
 # AI-Powered Airfoil Self-Noise Prediction
 
-**Author:** Chenwei.Zheng + AI
+**Author:** Chenwei.Zheng + AI  
 **Date:** July 2025
 
 ---
@@ -64,7 +63,7 @@ These instructions will guide you through setting up the environment and running
 
 ### Usage
 
-To run the entire pipeline (data download, training, and evaluation), execute the main script:
+To run the entire pipeline (data download, training, evaluation, and demo prediction), execute the main script:
 
 ```bash
 python airfoil_noise_prediction.py
@@ -72,13 +71,39 @@ python airfoil_noise_prediction.py
 
 The script will print the model's performance metrics and feature importances to the console.
 
+#### Predicting on New Data
+
+To predict the sound pressure level for new airfoil data:
+
+1. Prepare a CSV file named `demo_new_data.csv` in the project directory with the following columns (no header for `sound_pressure_level`):
+
+    ```
+    frequency,angle_of_attack,chord_length,free_stream_velocity,suction_side_thickness
+    ```
+
+    Example:
+    ```
+    frequency,angle_of_attack,chord_length,free_stream_velocity,suction_side_thickness
+    1250,0.5,0.3048,71.3,0.00266337
+    250,2.0,0.2032,50.0,0.0015
+    1000,5.0,0.1016,40.0,0.0020
+    3150,7.5,0.2540,60.0,0.0030
+    500,10.0,0.1524,55.0,0.0022
+    ```
+
+2. Run the script. It will generate an Excel file named `demo_predictions.xlsx` with two sheets:
+    - **InputData**: The original input data.
+    - **Predictions**: The input data plus predicted `sound_pressure_level` and a `prediction_stddev` column indicating the model's uncertainty (lower values mean higher confidence).
+
 ---
 
 ## 5. Project Structure
 
 ```
 .
-├── airfoil_noise_prediction.py  # Main script for data loading, training, and evaluation.
-├── requirements.txt             # Required Python libraries.
-└── README.md                    # This file.
+├── airfoil_noise_prediction.py  # Main script for data loading, training, evaluation, and prediction.
+├── demo_new_data.csv           # Example input data for prediction.
+├── demo_predictions.xlsx       # Output Excel file with predictions and confidence.
+├── requirements.txt            # Required Python libraries.
+└── README.md                   # This file.
 ```
