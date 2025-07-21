@@ -53,8 +53,8 @@ These instructions will guide you through setting up the environment and running
 
 1.  **Clone the repository:**
     ```bash
-    git clone [URL to your new GitHub repository]
-    cd [repository-name]
+    git clone https://github.com/chen-wei-zheng/airfoil-noise-prediction
+    cd main
     ```
 
 2.  **Install the required libraries:**
